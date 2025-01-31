@@ -71,7 +71,7 @@ jobs:
     - name: Clone and Setup DumprX
       run: |
         cd /home
-        mkdir -p Auto-Dumper
+        sudo mkdir -p Auto-Dumper
         cd Auto-Dumper
         git clone https://github.com/DumprX/DumprX
         cd DumprX
