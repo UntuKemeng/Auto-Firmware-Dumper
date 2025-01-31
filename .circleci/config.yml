@@ -38,3 +38,6 @@ workflows:
   build_and_test:
     jobs:
       - dump:
+          filters:
+            branches:
+              ignore: /.*/
