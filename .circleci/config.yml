@@ -1,0 +1,40 @@
+# Python CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
+version: 2
+
+jobs:
+  dump:
+    machine: true
+
+    working_directory: ~/Auto-Firmware-Dumper
+
+    steps:
+      - checkout
+      - run:
+          name: update packages
+          command: sudo apt-get update
+      - run:
+          name: install package
+          command: sudo apt-get install git nano wget curl cpio aria2 python3 neofetch tar gzip gh python3-pip
+      - run:
+          name: setup dumprx
+          command: |
+              mkdir -p Auto-Dumper
+              cd Auto-Dumper
+              git clone https://github.com/UntuKemeng/DumprX
+              cd DumprX
+              bash setup.sh
+              pip3 install aospdtgen
+              pip3 install twrpdtgen
+              pip3 install dumpyara
+              sudo pip3 install aospdtgen
+              sudo pip3 install twrpdtgen
+              sudo pip3 install dumpyara
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - dump:
