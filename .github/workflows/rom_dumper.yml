@@ -69,6 +69,8 @@ jobs:
         bash setup.sh
         pip3 install aospdtgen
         pip3 install twrpdtgen
+        sudo pip3 install aospdtgen
+        sudo pip3 install twrpdtgen
 
     - name: Creating Dump
       run: |
