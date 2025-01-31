@@ -64,14 +64,16 @@ jobs:
         cd ${GITHUB_WORKSPACE}
         mkdir -p Auto-Dumper
         cd Auto-Dumper
-        git clone https://github.com/DumprX/DumprX
+        git clone https://github.com/UntuKemeng/DumprX
         cd DumprX
         bash setup.sh
         pip3 install aospdtgen
         pip3 install twrpdtgen
+        pip3 install dumpyara
         pip3 install uvx
         sudo pip3 install aospdtgen
         sudo pip3 install twrpdtgen
+        sudo pip3 install dumpyara
         sudo pip3 install uvx
 
     - name: Creating Dump
@@ -84,9 +86,7 @@ jobs:
       run: |
         git config --global user.name "${{ env.UN }}"
         git config --global user.email "${{ env.UEM }}"
-        git config --global http.postBuffer 2048M
-        git config --global http.maxRequestBuffer 1024M
-        git config --global core.compression 0
+        git config --global http.postBuffer 524288000
         unset GITHUB_TOKEN
         gh auth login --with-token <<< "${{ secrets.GTOKEN }}"
 
@@ -183,9 +183,6 @@ jobs:
         git branch -M dump-"$codename"-"$dat"
         git add . -f
         git commit -s -m "Dump for $brand $codename"
-        export GIT_TRACE_PACKET=1
-        export GIT_TRACE=1
-        export GIT_CURL_VERBOSE=1
         gh repo create dump_"$brand"_"$codename" --public --description="Dump for $brand $codename " --source=. --remote=origin --push
         cd ${GITHUB_WORKSPACE}/Auto-Dumper
         mkdir vnd_project
@@ -242,9 +239,6 @@ jobs:
         git branch -M vendor-"$codename"-"$dat"
         git add . -f
         git commit -s -m "$codename : initial vendor tree"
-        export GIT_TRACE_PACKET=1
-        export GIT_TRACE=1
-        export GIT_CURL_VERBOSE=1
         gh repo create android_vendor_"$brand"_"$codename" --public --description="Vendor tree for $codename" --source=. --remote=origin --push
         echo "Succesfull"
         cd ${GITHUB_WORKSPACE}/Auto-Dumper
@@ -264,9 +258,6 @@ jobs:
         git branch -M lineage-"$codename"-"$dat"
         git add . -f
         git commit -s -m "$codename : LineageOS compatible device tree"
-        export GIT_TRACE_PACKET=1
-        export GIT_TRACE=1
-        export GIT_CURL_VERBOSE=1
         gh repo create lineage_device_"$brand"_"$codename" --public --description="LineageOS compatible tree for $codename " --source=. --remote=origin --push
       continue-on-error: true
 
@@ -285,9 +276,6 @@ jobs:
         git branch -M twrp-"$version"-"$dat"
         git add . -f
         git commit -s -m "$codename : TWRP compatible device tree"
-        export GIT_TRACE_PACKET=1
-        export GIT_TRACE=1
-        export GIT_CURL_VERBOSE=1
         gh repo create twrp_device_"$brand"_"$codename" --public --description="TWRP compatible tree for $codename " --source=. --remote=origin --push
       continue-on-error: true
 
