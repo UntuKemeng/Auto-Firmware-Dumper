@@ -71,7 +71,7 @@ jobs:
     - name: Clone and Setup DumprX
       run: |
         cd /home
-        mkdir mode=777 Auto-Dumper
+        sudo mkdir mode=777 Auto-Dumper
         cd Auto-Dumper
         git clone https://github.com/DumprX/DumprX
         cd DumprX
