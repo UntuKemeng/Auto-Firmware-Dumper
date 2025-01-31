@@ -71,21 +71,20 @@ jobs:
     - name: Clone and Setup DumprX
       run: |
         cd /home
-        sudo mkdir mode=777 Auto-Dumper
+        mkdir mode=777 Auto-Dumper
         cd Auto-Dumper
         git clone https://github.com/DumprX/DumprX
         cd DumprX
-        sudo chmod 777 *.sh
+        chmod 777 *.sh
         bash setup.sh
         pip3 install aospdtgen
         pip3 install twrpdtgen
-        pip3 install uvx
 
     - name: Creating Dump
       run: |
         cd /home/Auto-Dumper/DumprX
         bash dumper.sh "${{ env.FUR }}"
-        sudo chmod -R 777 out
+        chmod -R 777 out
 
     - name: Setting up Git
       run: |
@@ -99,13 +98,13 @@ jobs:
     - name: Uploading ROM Dump
       run: |
         cd /home/Auto-Dumper/DumprX/out
-        sudo chmod -R 777 *
+        chmod -R 777 *
         if [ -d system ]; then
            echo " "
         else
            echo "Failed!";
            cd /home/Auto-Dumper
-           sudo rm -rf DumprX
+           rm -rf DumprX
            exit 1;
         fi;
         los_dir="lineage-device-tree"
@@ -171,7 +170,7 @@ jobs:
            echo "$fingerprint" >> fingerprint.txt
            cd /home/Auto-Dumper/DumprX/out
         fi
-        sudo rm -rf .git
+        rm -rf .git
         echo "Compressing images..."
         max_size=48000000
         images=("recovery.img" "boot.img" "vendor_boot.img" "init_boot.img" "dtbo.img" "dtb.img")
@@ -191,7 +190,7 @@ jobs:
         git branch -M dump-"$codename"-"$dat"
         git add .
         git commit -s -m "Dump for $brand $codename"
-        gh repo create dump_"$brand"_"$codename" --public --description="$description" --source=. --remote=origin --push --debug
+        gh repo create dump_"$brand"_"$codename" --public --description="$description" --source=. --remote=origin --push
         cd /home/Auto-Dumper
         mkdir vnd_project
         mkdir vnd_project/dump
@@ -226,9 +225,9 @@ jobs:
         echo "Done cloning extract-utils."
         git clone --depth=1  https://github.com/LineageOS/android_prebuilts_extract-tools -b lineage-20.0 ./android/prebuilts/extract-tools
         echo "Done cloning extract-tools."
-        sudo chmod 777 android/device/"$brand"/"$codename"/setup-makefiles.sh
+        chmod 777 android/device/"$brand"/"$codename"/setup-makefiles.sh
         cd android/device/"$brand"/"$codename"
-        sudo chmod 777 extract-files.sh
+        chmod 777 extract-files.sh
         bash extract-files.sh /home/Auto-Dumper/vnd_project/dump/
         echo "Done extracting and making files."
         echo "Pushing as repository now."
@@ -241,7 +240,7 @@ jobs:
         codename=$(cat codename.txt)
         brand=$(cat brand.txt)
         cd vnd_project/android/vendor/"$brand"/"$codename"
-        sudo chmod -R 777 *
+        chmod -R 777 *
         dat=$(date +%Y%m%d)
         git init
         git branch -M vendor-"$codename"-"$dat"
@@ -250,8 +249,8 @@ jobs:
         gh repo create android_vendor_"$brand"_"$codename" --public --description="Vendor tree for $codename" --source=. --remote=origin --push
         echo "Succesfull"
         cd /home/Auto-Dumper
-        sudo rm -rf DumprX
-        sudo rm -rf vnd_project
+        rm -rf DumprX
+        rm -rf vnd_project
 
     - name: Uploading LineageOS Device Tree
       if: |
