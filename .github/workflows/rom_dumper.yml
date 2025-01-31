@@ -79,6 +79,7 @@ jobs:
     - name: Creating Dump
       run: |
         cd ${GITHUB_WORKSPACE}/Auto-Dumper/DumprX
+        export TERM=xterm
         bash dumper.sh "${{ env.FUR }}"
         chmod -R 777 out
 
