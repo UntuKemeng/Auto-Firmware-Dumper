@@ -89,8 +89,9 @@ jobs:
       run: |
         git config --global user.name "${{ env.UN }}"
         git config --global user.email "${{ env.UEM }}"
-        git config --global http.postBuffer "157286400"
-        git config --global https.postBuffer "157286400"
+        git config --global http.postBuffer 2048M
+        git config --global http.maxRequestBuffer 1024M
+        git config --global core.compression 9
         unset GITHUB_TOKEN
         gh auth login --with-token <<< "${{ secrets.GTOKEN }}"
 
@@ -172,7 +173,7 @@ jobs:
         rm -rf .git
         echo "Compressing images..."
         max_size=48000000
-        images=("recovery.img" "boot.img" "vendor_boot.img" "init_boot.img" "dtbo.img" "dtb.img")
+        images=("recovery.img" "boot.img" "product.img" "dtbo.img" "dtb.img")
         for pf in ${images[@]}; do
            if [ -f $pf ]; then
               if [[ $(stat -c %s $pf) -gt $max_size ]]; then
@@ -290,8 +291,7 @@ jobs:
         path: |
           ${GITHUB_WORKSPACE}/Auto-Dumper/boot.img
           ${GITHUB_WORKSPACE}/Auto-Dumper/recovery.img
-          ${GITHUB_WORKSPACE}/Auto-Dumper/vendor_boot.img
-          ${GITHUB_WORKSPACE}/Auto-Dumper/init_boot.img
+          ${GITHUB_WORKSPACE}/Auto-Dumper/product.img
           ${GITHUB_WORKSPACE}/Auto-Dumper/dtbo.img
           ${GITHUB_WORKSPACE}/Auto-Dumper/dtb.img
         if-no-files-found: ignore
