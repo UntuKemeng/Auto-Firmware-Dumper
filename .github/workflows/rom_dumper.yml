@@ -79,6 +79,7 @@ jobs:
         bash setup.sh
         pip3 install aospdtgen
         pip3 install twrpdtgen
+        pip3 install uvx
 
     - name: Creating Dump
       run: |
@@ -90,6 +91,8 @@ jobs:
       run: |
         git config --global user.name "${{ env.UN }}"
         git config --global user.email "${{ env.UEM }}"
+        git config --global http.postBuffer "157286400"
+        git config --global https.postBuffer "157286400"
         unset GITHUB_TOKEN
         gh auth login --with-token <<< "${{ secrets.GTOKEN }}"
 
