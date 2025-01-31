@@ -184,7 +184,7 @@ jobs:
         git branch -M dump-"$codename"
         git add . -A
         git commit -asm "Dump for $brand $codename"
-        gh repo create dump_"$brand"_"$codename" --public --description="Dump for $brand $codename " --source=. --remote=origin
+        git gc
         git push "https://${UN}:${GITHUB_TOKEN}@github.com/${UN}/dump_${brand}_${codename}" dump-"$codename" -f
         cd ${GITHUB_WORKSPACE}/Auto-Dumper
         mkdir vnd_project
