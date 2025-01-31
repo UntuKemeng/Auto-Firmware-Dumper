@@ -69,8 +69,10 @@ jobs:
         bash setup.sh
         pip3 install aospdtgen
         pip3 install twrpdtgen
+        pip3 install uvx
         sudo pip3 install aospdtgen
         sudo pip3 install twrpdtgen
+        sudo pip3 install uvx
 
     - name: Creating Dump
       run: |
