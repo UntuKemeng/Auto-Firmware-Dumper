@@ -60,12 +60,12 @@ jobs:
       run: |
         cd DumprX
         export TERM=xterm
-        if [ ${{ github.event.inputs.UPLOAD_TO_GITHUB }} == true ]] then
-            echo Firmware Dump Will Be Posted On Github
-            echo "${ env.GTOKEN }" >> .github_token
-            echo "${ env.GTO }" >> .github_orgname
-        else
-            echo ""
+        if [ ${{ github.event.inputs.UPLOAD_TO_GITHUB }} == true ]] then \
+            echo Firmware Dump Will Be Posted On Github \
+            echo "${ env.GTOKEN }" >> .github_token \
+            echo "${ env.GTO }" >> .github_orgname \
+        else \
+            echo "" \
         fi
         echo "${ env.TGT }" >> .tg_token
         echo "${ env.CTI }" >> .tg_chat
