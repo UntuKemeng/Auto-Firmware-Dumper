@@ -31,6 +31,7 @@ jobs:
       FUR: ${{ github.event.inputs.FIRMWARE_URL }}
       UN: ${{ github.event.inputs.USER_NAME }}
       UEM: ${{ github.event.inputs.USER_EMAIL }}
+      UTG: ${{ github.event.inputs.UPLOAD_TO_GITHUB }}
       GTO: ${{ secrets.GIT_ORG }}
       TGT: ${{ secrets.TG_TOKEN }}
       CTI: ${{ secrets.CHAT_ID }}
