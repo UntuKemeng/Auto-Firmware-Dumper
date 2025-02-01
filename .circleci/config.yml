@@ -48,6 +48,8 @@ jobs:
           command: |
               cd Auto-Dumper/DumprX
               export TERM=xterm
+              echo "${GTOKEN}" >> .github_token
+              echo "${GIT_ORG}" >> .github_orgname
               bash dumper.sh ${FUR}
               chmod -R 777 out
       - run:
