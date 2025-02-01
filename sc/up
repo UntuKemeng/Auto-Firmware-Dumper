@@ -93,7 +93,7 @@ echo "# dump_dump-${codename}" >> README.md
 git add . -f
 git branch -M dump-${codename}
 git commit -a -m "Dump for $brand $codename"
-gh repo create dump_${brand}_${codename} --public --description="Dump for $brand $codename" --source=. --remote=origin --push
+gh repo create dump_${brand}_${codename} --public --description="Dump for $brand $codename" --source=. --remote=https://${UN}:${GTOKEN}@github.com/${UN}/dump_${brand}_${codename}.git --push
 cd ${ABATA}/Auto-Dumper
 mkdir vnd_project
 mkdir vnd_project/dump
