@@ -1,0 +1,75 @@
+name: Auto Firmware Dumper
+
+on:
+  workflow_dispatch:
+    inputs:
+      USER_NAME:
+        description: 'Name in GitHub Account'
+        required: true
+        default: 'UntuKemeng'
+      USER_EMAIL:
+        description: 'E-mail in GitHub Account'
+        required: true
+        default: 'jarbull87@gmail.com'
+      FIRMWARE_URL:
+        description: 'Stock ROM Link'
+        required: true
+        default: 'https://asia-sysupwsdl.vivoglobal.com/upgrade/official/officialFiles/PD1987F_EX_A_6.17.2-update-full_1662601037.zip'
+      UPLOAD_TO_GITHUB:
+        description: 'Upload Dump To Github'
+        required: true
+        default: 'false'
+        type: boolean
+
+jobs:
+  dump:
+    name: Auto Firmware Dumper
+    if: github.event.repository.owner.id == github.event.sender.id
+    runs-on: ubuntu-latest
+    env:
+      GTOKEN: ${{ secrets.GTOKEN }}
+      FUR: ${{ github.event.inputs.FIRMWARE_URL }}
+      UN: ${{ github.event.inputs.USER_NAME }}
+      UEM: ${{ github.event.inputs.USER_EMAIL }}
+      GTO: ${{ secrets.GIT_ORG }}
+      TGT: ${{ secrets.TG_TOKEN }}
+      CTI: ${{ secrets.CHAT_ID }}
+    permissions: write-all
+    steps:
+    - name: Check Out
+      uses: actions/checkout@v4
+        
+    - name: Update Packages
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install git wget curl cpio aria2 python3 neofetch tar gzip python3-pip -y
+
+    - name: Clone and Setup DumprX
+      run: |
+        git clone https://github.com/UntuKemeng/DumprX
+        cd DumprX
+        bash setup.sh
+        pip3 install aospdtgen
+        pip3 install twrpdtgen
+        pip3 install dumpyara
+        sudo pip3 install aospdtgen
+        sudo pip3 install twrpdtgen
+        sudo pip3 install dumpyara
+
+    - name: DumprX
+      run: |
+        cd DumprX
+        msg() { echo -e "\e[1;32m$*\e[0m" }
+        export TERM=xterm
+        if [ -d "${{ github.event.inputs.UPLOAD_TO_GITHUB }}" == true ]]; then
+            msg Firmware Dump Will Be Posted On Github
+            echo "${GTOKEN}" >> .github_token
+            echo "${GTO}" >> .github_orgname
+        else
+            echo ""
+        fi
+        echo "${TGT}" >> .tg_token
+        echo "${CTI}" >> .tg_chat
+        git config --global user.name "${{ env.UN }}"
+        git config --global user.email "${{ env.UEM }}"
+        bash dumper.sh "${{ env.FUR }}"
