@@ -35,7 +35,7 @@ jobs:
       - run:
           name: dump firmware
           command: |
-              cd ${CIRCLE_WORKING_DIRECTORY}/Auto-Dumper/DumprX
+              cd Auto-Dumper/DumprX
               export TERM=xterm
               bash dumper.sh https://asia-sysupwsdl.vivoglobal.com/upgrade/official/officialFiles/PD1987F_EX_A_6.17.2-update-full_1662601037.zip
 
