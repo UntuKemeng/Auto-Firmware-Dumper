@@ -89,7 +89,7 @@ done
 find ${ABATA}/Auto-Dumper/DumprX/out -type f -size +50M -delete -exec echo "Deleted: "{} \;
 dat=$(date +%Y%m%d)
 git init
-echo "# dump_dump-${codename}" >> README.md
+echo "# dump_${brand}_${codename}" >> README.md
 # git add . -f
 # git branch -M dump-${codename}
 # git commit -a -m "Dump for $brand $codename"

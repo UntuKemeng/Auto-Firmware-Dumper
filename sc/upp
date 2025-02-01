@@ -17,7 +17,7 @@ git clone --depth=1 https://github.com/LineageOS/android_tools_extract-utils -b 
 echo "Done cloning extract-utils."
 git clone --depth=1  https://github.com/LineageOS/android_prebuilts_extract-tools -b lineage-20.0 ./android/prebuilts/extract-tools
 echo "Done cloning extract-tools."
-chmod 777 android/device/${brand}/${codename}"/setup-makefiles.sh
+chmod 777 android/device/${brand}/${codename}/setup-makefiles.sh
 cd android/device/${brand}/${codename}
 chmod 777 extract-files.sh
 bash extract-files.sh ${ABATA}/Auto-Dumper/vnd_project/dump/
