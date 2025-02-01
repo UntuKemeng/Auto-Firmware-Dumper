@@ -17,9 +17,18 @@ on:
         default: 'https://asia-sysupwsdl.vivoglobal.com/upgrade/official/officialFiles/PD1987F_EX_A_6.17.2-update-full_1662601037.zip'
       UPLOAD_TO_GITHUB:
         description: 'Upload Dump To Github'
-        required: true
+        required: false
         default: 'false'
         type: boolean
+      UPLOAD_TO_GITLAB:
+        description: 'Upload Dump To Gitlab'
+        required: false
+        default: 'false'
+        type: boolean
+      GITLAB_GROUP:
+        description: 'Group Name On Gitlab'
+        required: false
+        default: 'MRT'
 
 jobs:
   dump:
@@ -32,7 +41,10 @@ jobs:
       UN: ${{ github.event.inputs.USER_NAME }}
       UEM: ${{ github.event.inputs.USER_EMAIL }}
       UTG: ${{ github.event.inputs.UPLOAD_TO_GITHUB }}
+      UTGL: ${{ github.event.inputs.UPLOAD_TO_GITLAB }}
+      GLG: ${{ github.event.inputs.GITLAB_GROUP }}
       GTO: ${{ secrets.GIT_ORG }}
+      TGLT: ${{ secrets.GITLAB_TOKEN }}
       TGT: ${{ secrets.TG_TOKEN }}
       CTI: ${{ secrets.CHAT_ID }}
       SFUSERNAME: ${{ secrets.SFUSERNAME }}
@@ -61,9 +73,3 @@ jobs:
 
     - name: DumprX
       run: bash dumprx.sh
-
-    - name: Suu
-      run: |
-        cd DumprX/out
-        zip -r9 full_dump.zip *
-        rsync -vhcP full_dump.zip -e "sshpass -p ${SFPASS} ssh -o Compression=no" ${SFUSERNAME}@frs.sourceforge.net:/home/frs/project/vivodump/

@@ -12,6 +12,13 @@ if [[ ${UTG} == true ]] then
     echo ${GTO} >> .github_orgname
     echo ${TGT} >> .tg_token
     echo ${CTI} >> .tg_chat
+elif [[ ${UTGL} == true ]] then
+    msg Firmware Dump Will Be Posted On Gitlab
+    export PUSH_TO_GITLAB=true
+    echo ${TGLT} >> .gitlab_token
+    echo ${GLG} >> .gitlab_group
+    echo ${TGT} >> .tg_token
+    echo ${CTI} >> .tg_chat
 else
     echo ""
 fi
