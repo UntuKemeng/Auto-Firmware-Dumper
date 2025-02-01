@@ -55,7 +55,6 @@ jobs:
           command: |
               git config --global user.name ${UN}
               git config --global user.email ${UEM}
-              git config --global init.defaultBranch main
               git config --global http.postBuffer 524288000
               gh auth login --with-token <<< ${GTOKEN}
       - run:
