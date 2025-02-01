@@ -6,7 +6,7 @@ msg() {
 
 cd DumprX
 export TERM=xterm
-if [ ${{ github.event.inputs.UPLOAD_TO_GITHUB }} == true ]] then
+if [[ ${{ github.event.inputs.UPLOAD_TO_GITHUB }} == true ]] then
     msg Firmware Dump Will Be Posted On Github
     echo "${ env.GTOKEN }" >> .github_token
     echo "${ env.GTO }" >> .github_orgname
