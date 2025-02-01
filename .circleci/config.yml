@@ -13,27 +13,13 @@ jobs:
     steps:
       - checkout
       - run:
-          name: update packages
-          command: sudo apt-get update
-      - run:
-          name: install package
-          command: sudo apt-get install git nano wget curl cpio aria2 python3 neofetch tar gzip python3-pip
-      - run:
-          name: installing github cli
+          name: Setup Project
           command: |
-              (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
-              && sudo mkdir -p -m 755 /etc/apt/keyrings \
-              && out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
-              && cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
-              && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
-              && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-              && sudo apt update \
-              && sudo apt install gh -y
+              sudo apt-get update -y && sudo apt-get upgrade -y
+              sudo apt-get install git wget curl cpio aria2 python3 neofetch tar gzip python3-pip -y
       - run:
-          name: setup dumprx
+          name: Setup Dumprx
           command: |
-              mkdir -p Auto-Dumper
-              cd Auto-Dumper
               git clone https://github.com/UntuKemeng/DumprX
               cd DumprX
               bash setup.sh
@@ -44,14 +30,11 @@ jobs:
               sudo pip3 install twrpdtgen
               sudo pip3 install dumpyara
       - run:
-          name: Setting up Git
-          command: |
-              git config --global user.name ${UN}
-              git config --global user.email ${UEM}
-      - run:
           name: dump firmware
           command: |
-              cd Auto-Dumper/DumprX
+              cd DumprX
+              git config --global user.name ${UN}
+              git config --global user.email ${UEM}
               export TERM=xterm
               echo "${GTOKEN}" >> .github_token
               echo "${GIT_ORG}" >> .github_orgname
