@@ -97,7 +97,7 @@ echo "# dump_dump-${codename}" >> README.md
 git add -A
 git commit -asm "Dump for $brand $codename"
 git gc
-git push "https://${UN}:${GTOKEN}@github.com/${UN}/dump_${brand}_${codename}" dump-${codename} -f
+git push "https://${UN}:${GTOKEN}@github.com/${UN}/dump_${brand}_${codename}" origin -f
 cd ${ABATA}/Auto-Dumper
 mkdir vnd_project
 mkdir vnd_project/dump

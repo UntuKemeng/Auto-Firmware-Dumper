@@ -61,6 +61,18 @@ jobs:
       - run:
           name: Uploading Dump
           command: bash sc/up
+      - run:
+          name: Create Vendor Tree
+          command: bash sc/upp
+      - run:
+          name: Uploading Vendor Tree
+          command: bash sc/uppp
+      - run:
+          name: Uploading LineageOS Device Tree
+          command: bash sc/upppu
+      - run:
+          name: Uploading TWRP Device Tree
+          command: bash sc/upppuu
 
 workflows:
   version: 2

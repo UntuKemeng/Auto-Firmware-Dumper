@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+ABATA="/home/circleci/Auto-Firmware-Dumper/"
+cd ${ABATA}/Auto-Dumper
+codename=$(cat codename.txt)
+brand=$(cat brand.txt)
+cd vnd_project
+echo "Controlling LineageOS device tree..."
+if [ -d android/device/${brand}/${codename} ]; then
+    echo "Device tree found"
+else
+    echo "LINEAGEOS DEVİCE TREE NOT FOUND!"
+    exit 1
+fi
+echo "Clonning LineageOS tools..."
+git clone --depth=1 https://github.com/LineageOS/android_tools_extract-utils -b lineage-20.0 ./android/tools/extract-utils
+echo "Done cloning extract-utils."
+git clone --depth=1  https://github.com/LineageOS/android_prebuilts_extract-tools -b lineage-20.0 ./android/prebuilts/extract-tools
+echo "Done cloning extract-tools."
+chmod 777 android/device/${brand}/${codename}"/setup-makefiles.sh
+cd android/device/${brand}/${codename}
+chmod 777 extract-files.sh
+bash extract-files.sh ${ABATA}/Auto-Dumper/vnd_project/dump/
+echo "Done extracting and making files."
+echo "Pushing as repository now."
