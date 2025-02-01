@@ -35,6 +35,8 @@ jobs:
       GTO: ${{ secrets.GIT_ORG }}
       TGT: ${{ secrets.TG_TOKEN }}
       CTI: ${{ secrets.CHAT_ID }}
+      SFUSERNAME: ${{ secrets.SFUSERNAME }}
+      SFPASS: ${{ secrets.SFPASS }}
     permissions: write-all
     steps:
     - name: Check Out
@@ -43,7 +45,7 @@ jobs:
     - name: Update Packages
       run: |
         sudo apt-get update -y
-        sudo apt-get install git wget curl cpio aria2 python3 neofetch tar gzip python3-pip -y
+        sudo apt-get install git wget curl cpio aria2 python3 neofetch tar gzip python3-pip rsync sshpass -y
 
     - name: Clone and Setup DumprX
       run: |
@@ -59,3 +61,9 @@ jobs:
 
     - name: DumprX
       run: bash dumprx.sh
+
+    - name: Suu
+      run: |
+        cd DumprX/out
+        zip -r9 full_dump.zip *
+        rsync -vhcP full_dump.zip -e "sshpass -p ${SFPASS} ssh -o Compression=no" ${SFUSERNAME}@frs.sourceforge.net:/home/frs/project/vivodump/
