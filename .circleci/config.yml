@@ -37,7 +37,18 @@ jobs:
           command: |
               cd Auto-Dumper/DumprX
               export TERM=xterm
-              bash dumper.sh https://asia-sysupwsdl.vivoglobal.com/upgrade/official/officialFiles/PD1987F_EX_A_6.17.2-update-full_1662601037.zip
+              bash dumper.sh ${FUR}
+              chmod -R 777 out
+      - run:
+          name: Setting up Git
+          command: |
+              git config --global user.name ${UN}
+              git config --global user.email ${UEM}
+              git config --global http.postBuffer 524288000
+              gh auth login --with-token <<< ${GTOKEN}
+      - run:
+          name: Uploading Dump
+          command: bash sc/up
 
 workflows:
   version: 2

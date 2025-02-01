@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+
+ABATA="/home/circleci/Auto-Firmware-Dumper/"
+cd ${ABATA}/Auto-Dumper/DumprX/out
+chmod -R 777 *
+if [ -d system ]; then
+    echo " "
+else
+    echo "Failed!";
+    cd ${ABATA}/Auto-Dumper
+    rm -rf DumprX
+    exit 1;
+fi;
+los_dir="lineage-device-tree"
+if [ -d ${los_dir} ]; then
+    cp -r ${los_dir} ${ABATA}/Auto-Dumper
+else
+    echo "Lineage device tree not found!";
+fi;
+tw_dir="twrp-device-tree"
+if [ -d ${tw_dir} ]; then
+    cp -r ${tw_dir} ${ABATA}/Auto-Dumper
+else
+    echo "TWRP device tree not found!";
+    unset tw_dir
+fi;
+if [ -d vendor ]; then
+    cd vendor
+else
+    cd system
+    [ -d system ] && cd system
+fi
+codename=$(grep "ro.product.vendor.device=" build.prop | cut -d'=' -f2)
+brand=$(grep "ro.product.vendor.brand=" build.prop | cut -d'=' -f2)
+if [ ${codename} == "" ]; then
+    unset codename
+    codename=$(grep "ro.vendor.product.device=" build.prop | cut -d'=' -f2)
+    if [ ${codename} == "" ]; then
+        unset codename
+        codename=$(grep "ro.product.device=" build.prop | cut -d'=' -f2)
+    fi
+fi
+if [ ${brand} == "" ]; then
+    unset brand
+    brand=$(grep "ro.vendor.product.brand=" build.prop | cut -d'=' -f2)
+    if [ ${brand} == "" ]; then
+        unset brand
+        brand=$(grep "ro.product.brand=" build.prop | cut -d'=' -f2)
+    fi
+fi
+new_brand=$(echo ${brand} | tr 'A-Z' 'a-z')
+unset brand
+brand=${new_brand}
+new_codename=$(echo ${codename})
+codename=$(echo ${new_codename} | tr -d '[:space:]')
+cd ${ABATA}/Auto-Dumper
+echo ${codename} >> codename.txt
+echo ${brand} >> brand.txt
+cd ${ABATA}/Auto-Dumper/DumprX/out
+cd system
+if [ -d system ]; then
+    cd system
+    version=$(grep "ro.build.version.release_or_codename=" build.prop | cut -d'=' -f2)
+    fingerprint=$(grep "ro.system.build.fingerprint=" build.prop | cut -d'=' -f2)
+    cd ${ABATA}/Auto-Dumper
+    echo ${version} >> version.txt
+    echo ${fingerprint} >> fingerprint.txt
+    cd ${ABATA}/Auto-Dumper/DumprX/out
+else
+    version=$(grep "ro.build.version.release_or_codename=" build.prop | cut -d'=' -f2)
+    fingerprint=$(grep "ro.system.build.fingerprint=" build.prop | cut -d'=' -f2)
+    cd ${ABATA}/Auto-Dumper
+    echo ${version} >> version.txt
+    echo ${fingerprint} >> fingerprint.txt
+    cd ${ABATA}/Auto-Dumper/DumprX/out
+fi
+rm -rf .git
+echo "Compressing images..."
+max_size=48000000
+images=("recovery.img" "boot.img" "product.img" "dtbo.img" "dtb.img")
+for pf in ${images[@]}; do
+if [ -f $pf ]; then
+    if [[ $(stat -c %s $pf) -gt $max_size ]]; then
+        cp $pf ${ABATA}/Auto-Dumper
+        gzip -f $pf
+    fi
+fi
+done
+find ${ABATA}/Auto-Dumper/DumprX/out -type f -size +50M -delete -exec echo "Deleted: "{} \;
+dat=$(date +%Y%m%d)
+git init
+echo "# dump_dump-${codename}" >> README.md
+git add . -f
+git branch -M dump-${codename}
+git commit -a -m "Dump for $brand $codename"
+gh repo create dump_${brand}_${codename} --public --description="Dump for $brand $codename" --source=. --remote=origin --push
+cd ${ABATA}/Auto-Dumper
+mkdir vnd_project
+mkdir vnd_project/dump
+mkdir -p vnd_project/android/device/${brand}/${codename}
+cd DumprX/out
+if [ -d ${los_dir} ]; then
+    mv ${ABATA}/Auto-Dumper/DumprX/out/lineage-device-tree/* ${ABATA}/Auto-Dumper/vnd_project/android/device/${brand}/${codename}
+    rm -rf $los_dir
+else
+    echo "LINEAGEOS DEVİCE TREE NOT FOUND!"
+    echo "IF REQUESTED, VENDOR TREE WILL NOT BE CREATED"
+fi
+mv ${ABATA}/Auto-Dumper/DumprX/out/* ${ABATA}/Auto-Dumper/vnd_project/dump
