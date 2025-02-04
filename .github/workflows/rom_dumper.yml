@@ -88,6 +88,7 @@ jobs:
       run: |
         git config --global user.name "${{ env.UN }}"
         git config --global user.email "${{ env.UEM }}"
+        git config --global http.postBuffer 524288000
         unset GITHUB_TOKEN
         gh auth login --with-token <<< "${{ secrets.GTOKEN }}"
 
@@ -186,7 +187,7 @@ jobs:
             git branch -M dump-"$codename"-"$dat"
             git add .
             git commit -s -m "Dump for $brand $codename"
-            gh repo create dump_"$brand"_"$codename" --public --description="$description" --source=. --remote=origin --push --debug
+            gh repo create dump_"$brand"_"$codename" --public --description="$description" --source=. --remote=origin --push
         fi
         cd ${GITHUB_WORKSPACE}/Auto-Dumper
         mkdir vnd_project
@@ -287,11 +288,11 @@ jobs:
       with: 
         name: Prewiew images
         path: |
-          ${GITHUB_WORKSPACE}/Auto-Dumper/boot.img
-          ${GITHUB_WORKSPACE}/Auto-Dumper/recovery.img
-          ${GITHUB_WORKSPACE}/Auto-Dumper/vendor_boot.img
-          ${GITHUB_WORKSPACE}/Auto-Dumper/init_boot.img
-          ${GITHUB_WORKSPACE}/Auto-Dumper/dtbo.img
-          ${GITHUB_WORKSPACE}/Auto-Dumper/dtb.img
+          ${GITHUB_WORKSPACE}/Auto-Dumper/DumprX/boot.img
+          ${GITHUB_WORKSPACE}/Auto-Dumper/DumprX/recovery.img
+          ${GITHUB_WORKSPACE}/Auto-Dumper/DumprX/vendor_boot.img
+          ${GITHUB_WORKSPACE}/Auto-Dumper/DumprX/init_boot.img
+          ${GITHUB_WORKSPACE}/Auto-Dumper/DumprX/dtbo.img
+          ${GITHUB_WORKSPACE}/Auto-Dumper/DumprX/dtb.img
         if-no-files-found: ignore
       continue-on-error: true
