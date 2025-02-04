@@ -184,6 +184,7 @@ jobs:
         if [ "$UGT" == "true" ]; then
             cd ${GITHUB_WORKSPACE}/Auto-Dumper/DumprX/out
             git config http.postBuffer 524288000
+            git init
             git add -A
             git commit -asm "Dump for $brand $codename"
             git branch -M dump_"$brand"_"$codename"
