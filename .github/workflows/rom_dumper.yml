@@ -88,7 +88,6 @@ jobs:
       run: |
         git config --global user.name "${{ env.UN }}"
         git config --global user.email "${{ env.UEM }}"
-        git config --global http.postBuffer 524288000
         unset GITHUB_TOKEN
         gh auth login --with-token <<< "${{ secrets.GTOKEN }}"
 
@@ -183,11 +182,15 @@ jobs:
         description="Dump for $brand $codename"
         description=$(echo "$description" | tr -d '\n\r\t')
         if [ "$UGT" == "true" ]; then
-            git init
-            git branch -M dump-"$codename"-"$dat"
-            git add .
-            git commit -s -m "Dump for $brand $codename"
-            gh repo create dump_"$brand"_"$codename" --public --description="$description" --source=. --remote=origin --push
+            cd ${GITHUB_WORKSPACE}/Auto-Dumper/DumprX/out
+            git config http.postBuffer 524288000
+            git add -A
+            git commit -asm "Dump for $brand $codename"
+            git branch -M dump_"$brand"_"$codename"
+            git gc
+            gh repo create dump_"$brand"_"$codename" --public --description="$description" --source=.
+            git remote add origin https://${UN}:${GITHUB_TOKEN}@github.com/${UN}/dump_${brand}_${codename}.git
+            git push -u origin dump_"$brand"_"$codename"
         fi
         cd ${GITHUB_WORKSPACE}/Auto-Dumper
         mkdir vnd_project
