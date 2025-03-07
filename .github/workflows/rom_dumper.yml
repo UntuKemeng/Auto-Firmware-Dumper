@@ -53,8 +53,8 @@ jobs:
         cd ${GITHUB_WORKSPACE}/Auto-Dumper/DumprX
         echo "${GITLAB_TOKEN}" >> .gitlab_token
         echo "${GITLAB_ORG}" >> .gitlab_group
-        echo "${TG_TOKEN}" >> .gitlab_token
-        echo "${CHAT_ID}" >> .gitlab_group
+        echo "${TG_TOKEN}" >> .tg_token
+        echo "${CHAT_ID}" >> .tg_chat
         git config --global user.name "${USER_NAME}"
         git config --global user.email "${USER_EMAIL}"
         bash dumper.sh "${FIRMWARE_URL}"
