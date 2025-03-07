@@ -44,18 +44,17 @@ jobs:
         mkdir -p Auto-Dumper && cd Auto-Dumper
         git clone https://github.com/DumprX/DumprX.git && cd DumprX
         bash setup.sh
-        cd
-        echo "${SSH_KEY}" > .ssh/id_rsa
-        echo "${SSH_PUBKEY}" > .ssh/id_rsa.pub
-        echo "${KNOWN_HOSTS}" > .ssh/known_hosts
+        echo "${SSH_KEY}" >> ~/.ssh/id_rsa
+        echo "${SSH_PUBKEY}" >> ~/.ssh/id_rsa.pub
+        echo "${KNOWN_HOSTS}" >> ~/.ssh/known_hosts
 
     - name: Creating Dump
       run: |
         cd ${GITHUB_WORKSPACE}/Auto-Dumper/DumprX
-        echo "${GITLAB_TOKEN}" > .gitlab_token
-        echo "${GITLAB_ORG}" > .gitlab_group
-        echo "${TG_TOKEN}" > .tg_token
-        echo "${CHAT_ID}" > .tg_chat
+        echo "${GITLAB_TOKEN}" >> .gitlab_token
+        echo "${GITLAB_ORG}" >> .gitlab_group
+        echo "${TG_TOKEN}" >> .tg_token
+        echo "${CHAT_ID}" >> .tg_chat
         git config --global user.name "${USER_NAME}"
         git config --global user.email "${USER_EMAIL}"
         bash dumper.sh "${FIRMWARE_URL}"
