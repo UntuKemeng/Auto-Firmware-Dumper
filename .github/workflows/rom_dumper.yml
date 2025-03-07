@@ -44,9 +44,10 @@ jobs:
         mkdir -p Auto-Dumper && cd Auto-Dumper
         git clone https://github.com/DumprX/DumprX.git && cd DumprX
         bash setup.sh
-        sudo echo "${SSH_KEY}" >> /root/.ssh/id_rsa
-        sudo echo "${SSH_PUBKEY}" >> /root/.ssh/id_rsa.pub
-        sudo echo "${KNOWN_HOSTS}" >> /root/.ssh/known_hosts
+        cd
+        echo "${SSH_KEY}" >> .ssh/id_rsa
+        echo "${SSH_PUBKEY}" >> .ssh/id_rsa.pub
+        echo "${KNOWN_HOSTS}" >> .ssh/known_hosts
 
     - name: Creating Dump
       run: |
