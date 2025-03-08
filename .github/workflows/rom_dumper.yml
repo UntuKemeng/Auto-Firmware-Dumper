@@ -22,6 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      PUSH_TO_GITLAB: true
     permissions: write-all
     steps:
     - name: Check Out
