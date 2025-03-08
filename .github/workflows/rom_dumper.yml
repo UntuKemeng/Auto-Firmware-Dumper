@@ -21,13 +21,6 @@ jobs:
     name: Auto Firmware Dumper
     runs-on: ubuntu-latest
     env:
-      FIRMWARE_URL: ${{ github.event.inputs.FIRMWARE_URL }}
-      USER_NAME: ${{ github.event.inputs.USER_NAME }}
-      USER_EMAIL: ${{ github.event.inputs.USER_EMAIL }}
-      GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
-      GITLAB_ORG: ${{ secrets.GIT_ORG }}
-      TG_TOKEN: ${{ secrets.TG_TOKEN }}
-      CHAT_ID: ${{ secrets.CHAT_ID }}
       SSH_AUTH_SOCK: /tmp/ssh_agent.sock
     permissions: write-all
     steps:
@@ -39,27 +32,26 @@ jobs:
 
     - name: Clone and Setup DumprX
       run: |
-        mkdir -p Auto-Dumper && cd Auto-Dumper
         git clone https://github.com/DumprX/DumprX.git && cd DumprX
         bash setup.sh
 
     - name: Add SSH key
       run: |
-          mkdir -p /home/runner/.ssh
-          echo "${{ secrets.SSH_KEY }}" > /home/runner/.ssh/id_rsa
-          echo "${{ secrets.KNOWN_HOSTS }}" > /home/runner/.ssh/known_hosts
-          chmod 600 /home/runner/.ssh/id_rsa
-          chmod 600 /home/runner/.ssh/known_hosts
-          ssh-agent -a $SSH_AUTH_SOCK > /dev/null	
-          ssh-add /home/runner/.ssh/id_rsa
+        mkdir -p /home/runner/.ssh
+        echo "${{ secrets.SSH_KEY }}" > /home/runner/.ssh/id_rsa
+        echo "${{ secrets.KNOWN_HOSTS }}" > /home/runner/.ssh/known_hosts
+        chmod 600 /home/runner/.ssh/id_rsa
+        chmod 600 /home/runner/.ssh/known_hosts
+        ssh-agent -a $SSH_AUTH_SOCK > /dev/null	
+        ssh-add /home/runner/.ssh/id_rsa
 
     - name: Creating Dump
       run: |
-        cd ${GITHUB_WORKSPACE}/Auto-Dumper/DumprX
-        echo "${GITLAB_TOKEN}" > .gitlab_token
-        echo "${GITLAB_ORG}" > .gitlab_group
-        echo "${TG_TOKEN}" > .tg_token
-        echo "${CHAT_ID}" > .tg_chat
-        git config --global user.name "${USER_NAME}"
-        git config --global user.email "${USER_EMAIL}"
-        bash dumper.sh "${FIRMWARE_URL}"
+        cd ${GITHUB_WORKSPACE}/DumprX
+        echo "${{ secrets.GITLAB_TOKEN }}" > .gitlab_token
+        echo "${{ secrets.GIT_ORG }}" > .gitlab_group
+        echo "${{ secrets.TG_TOKEN }}" > .tg_token
+        echo "${{ secrets.CHAT_ID }}" > .tg_chat
+        git config --global user.name "${{ github.event.inputs.USER_NAME }}"
+        git config --global user.email "${{ github.event.inputs.USER_EMAIL }}"
+        bash dumper.sh "${{ github.event.inputs.FIRMWARE_URL }}"
