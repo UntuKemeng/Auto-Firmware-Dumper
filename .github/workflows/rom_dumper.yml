@@ -23,6 +23,7 @@ jobs:
     env:
       SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       PUSH_TO_GITLAB: true
+      TERM: xterm-256color
     permissions: write-all
     steps:
     - name: Check Out
