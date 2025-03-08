@@ -35,6 +35,7 @@ jobs:
       run: |
         git clone https://github.com/DumprX/DumprX.git && cd DumprX
         bash setup.sh
+        pip3 install pycryptodome
 
     - name: Add SSH key
       run: |
