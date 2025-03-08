@@ -3,14 +3,6 @@ name: Auto Firmware Dumper
 on:
   workflow_dispatch:
     inputs:
-      USER_NAME:
-        description: 'Name in GitHub Account'
-        required: true
-        default: ''
-      USER_EMAIL:
-        description: 'E-mail in GitHub Account'
-        required: true
-        default: ''
       FIRMWARE_URL:
         description: 'Stock ROM Link'
         required: true
@@ -26,9 +18,6 @@ jobs:
       TERM: xterm-256color
     permissions: write-all
     steps:
-    - name: Check Out
-      uses: actions/checkout@v4
-
     - name: Update Packages
       run: sudo apt -y install cpio aria2 git python3 neofetch tar gzip
 
@@ -55,6 +44,6 @@ jobs:
         echo "${{ secrets.GIT_ORG }}" > .gitlab_group
         echo "${{ secrets.TG_TOKEN }}" > .tg_token
         echo "${{ secrets.CHAT_ID }}" > .tg_chat
-        git config --global user.name "${{ github.event.inputs.USER_NAME }}"
-        git config --global user.email "${{ github.event.inputs.USER_EMAIL }}"
+        git config --global user.name "AnGgIt86"
+        git config --global user.email "jarbull86@gmail.com"
         bash dumper.sh "${{ github.event.inputs.FIRMWARE_URL }}"
