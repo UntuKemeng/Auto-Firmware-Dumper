@@ -24,13 +24,11 @@ jobs:
       FIRMWARE_URL: ${{ github.event.inputs.FIRMWARE_URL }}
       USER_NAME: ${{ github.event.inputs.USER_NAME }}
       USER_EMAIL: ${{ github.event.inputs.USER_EMAIL }}
-      SSH_KEY: ${{ secrets.SSH_KEY }}
-      SSH_PUBKEY: ${{ secrets.SSH_PUBKEY }}
-      KNOWN_HOSTS: ${{ secrets.KNOWN_HOSTS }}
       GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
       GITLAB_ORG: ${{ secrets.GIT_ORG }}
       TG_TOKEN: ${{ secrets.TG_TOKEN }}
       CHAT_ID: ${{ secrets.CHAT_ID }}
+      SSH_AUTH_SOCK: /tmp/ssh_agent.sock
     permissions: write-all
     steps:
     - name: Check Out
@@ -45,19 +43,26 @@ jobs:
         git clone https://github.com/DumprX/DumprX.git && cd DumprX
         bash setup.sh
 
-    - name: Install SSH key
-      uses: tanmancan/action-setup-ssh-agent-key@1.0.0
-      with:
-        ssh-private-key: "${SSH_KEY}"
-        ssh-public-key: "${SSH_PUBKEY}"
+    - name: Add SSH key
+      run: |
+          mkdir -p /home/runner/.ssh
+          echo "${{ secrets.SSH_KEY }}" > /home/runner/.ssh/id_rsa
+          echo "${{ secrets.SSH_PUBKEY }}" > /home/runner/.ssh/id_rsa.pub
+          echo "${{ secrets.KNOWN_HOSTS }}" > /home/runner/.ssh/known_hosts
+          chmod 600 /home/runner/.ssh/id_rsa
+          chmod 600 /home/runner/.ssh/id_rsa.pub
+          chmod 600 /home/runner/.ssh/known_hosts
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null	
+          ssh-add /home/runner/.ssh/id_rsa
+          ssh-add /home/runner/.ssh/id_rsa.pub
 
     - name: Creating Dump
       run: |
         cd ${GITHUB_WORKSPACE}/Auto-Dumper/DumprX
-        echo "${GITLAB_TOKEN}" >> .gitlab_token
-        echo "${GITLAB_ORG}" >> .gitlab_group
-        echo "${TG_TOKEN}" >> .tg_token
-        echo "${CHAT_ID}" >> .tg_chat
+        echo "${GITLAB_TOKEN}" > .gitlab_token
+        echo "${GITLAB_ORG}" > .gitlab_group
+        echo "${TG_TOKEN}" > .tg_token
+        echo "${CHAT_ID}" > .tg_chat
         git config --global user.name "${USER_NAME}"
         git config --global user.email "${USER_EMAIL}"
         bash dumper.sh "${FIRMWARE_URL}"
